@@ -14,6 +14,7 @@ import jp.co.axiz.web.entity.Admin;
 @Repository
 public class AdminDao implements IAdminDao {
 
+	//依存性の注入(使用するファイルと変数名の宣言)
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 

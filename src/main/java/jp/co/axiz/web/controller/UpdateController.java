@@ -20,6 +20,7 @@ import jp.co.axiz.web.service.impl.UserInfoService;
 @Controller
 public class UpdateController {
 
+//依存性の注入(使用するファイルと変数名の宣言)
 	@Autowired
 	private SessionInfo sessionInfo;
 
@@ -29,27 +30,29 @@ public class UpdateController {
 	@Autowired
 	private UserInfoService userInfoService;
 
+//URLとメソッドの紐づけ
 	@RequestMapping("/update")
 	public String update(@ModelAttribute("updateForm") UpdateForm form, Model model) {
-		return "update";
+		return "update";	//update.jspへ遷移
 	}
 
+//URLとメソッドの紐づけ
 	@RequestMapping(value = "/updateInput", method = RequestMethod.POST)
 	public String updateInput(@Validated @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
 			Model model) {
 
 		if (bindingResult.hasFieldErrors("userId")) {
 			String errorMsg = messageSource.getMessage("required.error", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
-			return "update";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "update";	//update.jspへ遷移
 		}
 
 		UserInfo user = userInfoService.findById(form.getUserId());
 
-		if(user == null) {
+		if(user == null) {	//nullのとき
 			String errorMsg = messageSource.getMessage("id.not.found.error", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
-			return "update";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "update";	//update.jspへ遷移
 		}
 
 		sessionInfo.setPrevUser(user);
@@ -58,17 +61,18 @@ public class UpdateController {
 		form.setNewTel(user.getTelephone());
 		form.setNewPassword(user.getPassword());
 
-		return "updateInput";
+		return "updateInput";	//updateInput.jspへ遷移
 	}
 
+//URLとメソッドの紐づけ
 	@RequestMapping(value = "/updateConfirm", method = RequestMethod.POST)
 	public String updateConfirm(@Validated @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
 			Model model) {
 
 		if (form.hasRequiredError()) {
 			String errorMsg = messageSource.getMessage("required.error", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
-			return "updateInput";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "updateInput";	//updateInput.jspへ遷移
 		}
 
 		UserInfo beforeUser = sessionInfo.getPrevUser();
@@ -79,10 +83,10 @@ public class UpdateController {
 		afterUser.setTelephone(form.getNewTel());
 		afterUser.setPassword(form.getNewPassword());
 
-		if(afterUser.equals(beforeUser)) {
+		if(afterUser.equals(beforeUser)) {//入力値が変わっていないとき
 			String errorMsg = messageSource.getMessage("required.change", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
-			return "updateInput";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "updateInput";	//updateInput.jspへ遷移
 		}
 
 		sessionInfo.setAfterUser(afterUser);
@@ -95,9 +99,10 @@ public class UpdateController {
 			form.setConfirmNewPassword(afterUser.getPassword());
 		}
 
-		return "updateConfirm";
+		return "updateConfirm";	//updateConfirm.jspへ遷移
 	}
 
+//URLとメソッドの紐づけ
 	@RequestMapping(value = "/updateInputBack")
 	public String updateInputBack(@ModelAttribute("updateForm") UpdateForm form, Model model) {
 
@@ -108,10 +113,10 @@ public class UpdateController {
 		form.setNewTel(afterUser.getTelephone());
 		form.setNewPassword(afterUser.getPassword());
 
-		return "updateInput";
+		return "updateInput";	//updateInput.jspへ遷移
 	}
 
-
+//URLとメソッドの紐づけ
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String updateExecute(@Validated @ModelAttribute("updateForm") UpdateForm form, BindingResult bindingResult,
 			Model model) {
@@ -120,7 +125,7 @@ public class UpdateController {
 
 		if(!afterUser.getPassword().equals(form.getConfirmNewPassword())) {
 			String errorMsg = messageSource.getMessage("password.not.match.error", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
 
 			form.setConfirmNewPassword("");
 
@@ -129,7 +134,7 @@ public class UpdateController {
 			form.setPrevTel(beforeUser.getTelephone());
 			form.setPrevPassword(beforeUser.getPassword());
 
-			return "updateConfirm";
+			return "updateConfirm";	//updateConfirm.jspへ遷移
 		}
 
 		userInfoService.update(afterUser);
@@ -139,19 +144,6 @@ public class UpdateController {
 
 		model.addAttribute("user", sessionInfo.getLoginUser());
 
-		return "updateResult";
+		return "updateResult";	//updateResult.jspへ遷移
 	}
-
-//	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-//	public String deleteExecute(@Validated @ModelAttribute("deleteForm") DeleteForm form, BindingResult bindingResult,
-//			Model model) {
-//
-//		int id = form.getUserId();
-//
-//		userInfoService.delete(id);
-//
-//		model.addAttribute("user", adminService.getLoginUser());
-//
-//		return "deleteResult";
-//	}
 }

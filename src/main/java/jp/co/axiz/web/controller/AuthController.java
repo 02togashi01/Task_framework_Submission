@@ -20,6 +20,7 @@ import jp.co.axiz.web.service.impl.AdminService;
 @Controller
 public class AuthController {
 
+//依存性の注入(使用するファイルと変数名の宣言)
 	@Autowired
     MessageSource messageSource;
 
@@ -31,9 +32,10 @@ public class AuthController {
 
 	@RequestMapping("/login")
 	public String login(@ModelAttribute("loginForm") LoginForm form, Model model) {
-		return "login";
+		return "login";	//login.jspへ遷移
 	}
 
+//URLとメソッドの紐づけ
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(@Validated @ModelAttribute("loginForm") LoginForm form, BindingResult bindingResult,
 			Model model) {
@@ -41,25 +43,26 @@ public class AuthController {
 		String errorMsg = messageSource.getMessage("login.error", null, Locale.getDefault());
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("errmsg", errorMsg);
-			return "login";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "login";	//login.jspへ遷移
 		}
 
 		Admin admin = adminService.authentication(form.getLoginId(), form.getPassword());
 
 		if (admin == null) {
-			model.addAttribute("errmsg", errorMsg);
-			return "login";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "login";	//login.jspへ遷移
 		} else {
 			sessionInfo.setLoginUser(admin);
 			model.addAttribute("user", sessionInfo.getLoginUser());
-			return "menu";
+			return "menu";	//menu.jspへ遷移
 		}
 	}
 
+//URLとメソッドの紐づけ
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public String logout(Model model) {
 		sessionInfo.invalidate();
-		return "logout";
+		return "logout";	//logout.jspへ遷移
 	}
 }

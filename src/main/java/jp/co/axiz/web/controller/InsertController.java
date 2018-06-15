@@ -20,6 +20,7 @@ import jp.co.axiz.web.service.impl.UserInfoService;
 @Controller
 public class InsertController {
 
+	//依存性の注入(使用するファイルと変数名の宣言)
 	@Autowired
 	private SessionInfo sessionInfo;
 
@@ -29,19 +30,21 @@ public class InsertController {
 	@Autowired
 	private UserInfoService userInfoService;
 
+	//URLとメソッドの紐づけ
 	@RequestMapping("/insert")
 	public String insert(@ModelAttribute("insertForm") InsertForm form, Model model) {
 		return "insert";
 	}
 
+	//URLとメソッドの紐づけ
 	@RequestMapping(value = "/insertConfirm", method = RequestMethod.POST)
 	public String insertConfirm(@Validated @ModelAttribute("insertForm") InsertForm form, BindingResult bindingResult,
 			Model model) {
 
 		if (bindingResult.hasErrors()) {
 			String errorMsg = messageSource.getMessage("required.error", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
-			return "insert";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "insert";	//insert.jspへ遷移
 		}
 
 		UserInfo user = new UserInfo();
@@ -51,9 +54,10 @@ public class InsertController {
 
 		sessionInfo.setNewUser(user);
 
-		return "insertConfirm";
+		return "insertConfirm";	//insertConfirm.jspへ遷移
 	}
 
+	//URLとメソッドの紐づけ
 	@RequestMapping(value = "/insertBack")
 	public String insertBack(@ModelAttribute("insertForm") InsertForm form, Model model) {
 
@@ -63,9 +67,10 @@ public class InsertController {
 		form.setTel(user.getTelephone());
 		form.setPassword(user.getPassword());
 
-		return "insert";
+		return "insert";	//insert.jspへ遷移
 	}
 
+	//URLとメソッドの紐づけ
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public String insertExecute(@Validated @ModelAttribute("insertForm") InsertForm form, BindingResult bindingResult,
 			Model model) {
@@ -74,11 +79,11 @@ public class InsertController {
 
 		if(!user.getPassword().equals(form.getConfirmPassword())) {
 			String errorMsg = messageSource.getMessage("password.not.match.error", null, Locale.getDefault());
-			model.addAttribute("errmsg", errorMsg);
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
 
 			form.setConfirmPassword("");
 
-			return "insertConfirm";
+			return "insertConfirm";	//insertConfirm.jspへ遷移
 		}
 
 		int id = userInfoService.insert(user);
@@ -89,6 +94,6 @@ public class InsertController {
 
 		model.addAttribute("user", sessionInfo.getLoginUser());
 
-		return "insertResult";
+		return "insertResult";	//insertResult.jspへ遷移
 	}
 }

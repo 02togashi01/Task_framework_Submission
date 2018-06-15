@@ -19,6 +19,7 @@ import jp.co.axiz.web.service.impl.UserInfoService;
 @Controller
 public class SelectController {
 
+	//依存性の注入(使用するファイルと変数名の宣言)
 	@Autowired
     MessageSource messageSource;
 
@@ -30,6 +31,7 @@ public class SelectController {
 		return "select";
 	}
 
+	//URLとメソッドの紐づけ
 	@RequestMapping(value = "/list")
 	public String list(@Validated @ModelAttribute("selectForm") SelectForm form, BindingResult bindingResult,
 			Model model) {
@@ -37,8 +39,8 @@ public class SelectController {
 		String errorMsg = messageSource.getMessage("select.error", null, Locale.getDefault());
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("errmsg", errorMsg);
-			return "select";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "select";	//select.jspへ遷移
 		}
 
 		UserInfo condition = new UserInfo();
@@ -49,11 +51,11 @@ public class SelectController {
 		List<UserInfo> resultList = userInfoService.find(condition);
 
 		if(resultList.isEmpty()) {
-			model.addAttribute("errmsg", errorMsg);
-			return "select";
+			model.addAttribute("errmsg", errorMsg);	//エラーメッセージ
+			return "select";	//select.jspへ遷移
 		}else {
 			model.addAttribute("userlist", resultList);
-			return "selectResult";
+			return "selectResult";	//selectResult.jspへ遷移
 		}
 	}
 }
