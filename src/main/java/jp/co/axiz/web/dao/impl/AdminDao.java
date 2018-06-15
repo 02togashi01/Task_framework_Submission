@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import jp.co.axiz.web.dao.IAdminDao;
 import jp.co.axiz.web.entity.Admin;
 
+//DBとのやり取りを行う
 @Repository
 public class AdminDao implements IAdminDao {
 

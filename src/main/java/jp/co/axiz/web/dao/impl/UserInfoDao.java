@@ -13,10 +13,12 @@ import org.springframework.stereotype.Repository;
 
 import jp.co.axiz.web.dao.IUserInfoDao;
 import jp.co.axiz.web.entity.UserInfo;
+//DBとのやり取りを行う
 
 @Repository
 public class UserInfoDao implements IUserInfoDao {
 
+	//依存性の注入(使用するファイルと変数名の宣言)
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
